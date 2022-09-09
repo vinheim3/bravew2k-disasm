@@ -17,4 +17,4 @@
 .asciitable
 .enda
 
-.emptyfill $ff
+.emptyfill $00
