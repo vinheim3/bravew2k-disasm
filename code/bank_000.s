@@ -7195,8 +7195,8 @@ br_00_e469:
 
 
 ScreenSetupsSrcData:
-	.dw Data_0_e4c7
-	.dw $e4d0
+	.dw Screen0
+	.dw Screen1
 	.dw $e4d9
 	.dw $e4e2
 	.dw $e4eb
@@ -7238,7 +7238,7 @@ ScreenSetupsSrcData:
 	.dw $e604
 
 
-Data_0_e4c7:
+Screen0:
 	.dw $8b81 ; palettes
 	.dw $8000 ; 1st decomp in bank $b, to $2000 nametable
 	.db $00 ; determines if a 3rd decomp is done
@@ -7246,11 +7246,15 @@ Data_0_e4c7:
 	.dw $8b71 ; would be the 3rd decomp
 
 
+Screen1:
+	.dw $8b81
+	.dw $8b91
+	.db $01
+	.dw $8e26
+	.dw $9520
+
+
 ;
-	sta ($8b, x)                                                  ; $e4d0 : $81, $8b
-	sta ($8b), y                                                  ; $e4d2 : $91, $8b
-	ora ($26, x)                                                  ; $e4d4 : $01, $26
-	stx $9520                                                  ; $e4d6 : $8e, $20, $95
 	sta ($8b, x)                                                  ; $e4d9 : $81, $8b
 	.db $9e                                                  ; $e4db : $9e
 	.db $9b                                                  ; $e4dc : $9b
