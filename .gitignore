@@ -1,0 +1,7 @@
+build/*
+original/*
+__pycache__/*
+*.bin
+*.dbg
+*.nes
+*.sym
