@@ -12,7 +12,11 @@
 .endme
 
 .banksize $8000
+.ifdef HACK
+.rombanks 32
+.else
 .rombanks 16
+.endif
 
 .asciitable
 .enda

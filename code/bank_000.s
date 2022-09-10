@@ -2819,6 +2819,27 @@ DecompressData:
 	adc #$00                                                  ; $9127 : $69, $00
 	sta $15                                                  ; $9129 : $85, $15
 
+.ifdef HACK
+	ldy #$00
+@nextByte:
+	lda ($14), y
+	sta PPUDATA
+	dec $16
+	bne @br_9157
+	lda $17
+	beq @end_9171
+	dec $17
+@br_9157:
+	iny
+	bne @toNextByte
+	inc $15
+@toNextByte:
+	jmp @nextByte-$90fd+$400
+
+.orga $9171
+
+.else
+
 @loop_912b:
 ; put src+8 in 1a eg 45 from Data_e_8010
 	ldy #$08                                                  ; $912b : $a0, $08
@@ -2878,6 +2899,8 @@ DecompressData:
 	adc #$00                                                  ; $916b : $69, $00
 	sta $15                                                  ; $916d : $85, $15
 	bne @loop_912b                                                  ; $916f : $d0, $ba
+
+.endif
 
 @end_9171:
 	lda $10                                                  ; $9171 : $a5, $10
@@ -3378,7 +3401,11 @@ ScreenSetupsSrcBanks:
 	.db $08
 	.db $08
 	.db $08
+.ifdef HACK
+	.db $10
+.else
 	.db $0e
+.endif
 	.db $0e
 	.db $0e
 	.db $0e
@@ -7195,8 +7222,8 @@ br_00_e469:
 
 
 ScreenSetupsSrcData:
-	.dw Screen0
-	.dw Screen1
+	.dw Screen00h
+	.dw Screen01h
 	.dw $e4d9
 	.dw $e4e2
 	.dw $e4eb
@@ -7227,7 +7254,7 @@ ScreenSetupsSrcData:
 	.dw $e5b2
 	.dw $e5bb
 	.dw $e5c4
-	.dw $e5cd
+	.dw Screen20h
 	.dw $e5d4
 	.dw $e5db
 	.dw $e5e2
@@ -7238,7 +7265,7 @@ ScreenSetupsSrcData:
 	.dw $e604
 
 
-Screen0:
+Screen00h:
 	.dw $8b81 ; palettes
 	.dw $8000 ; 1st decomp in bank $b, to $2000 nametable
 	.db $00 ; determines if a 3rd decomp is done
@@ -7246,7 +7273,7 @@ Screen0:
 	.dw $8b71 ; would be the 3rd decomp
 
 
-Screen1:
+Screen01h:
 	.dw $8b81
 	.dw $8b91
 	.db $01
@@ -7416,13 +7443,24 @@ br_00_e565:
 	ora ($05, x)                                                  ; $e5c8 : $01, $05
 	sbc $d3                                                  ; $e5ca : $e5, $d3
 	nop                                                  ; $e5cc : $ea
-	.db $00                                                  ; $e5cd : $00
-	.db $80                                                  ; $e5ce : $80
-	bpl br_00_e551                                                  ; $e5cf : $10, $80
 
-	.db $00                                                  ; $e5d1 : $00
-	eor $8e81, y                                                  ; $e5d2 : $59, $81, $8e
-	dey                                                  ; $e5d5 : $88
+
+Screen20h:
+.ifdef HACK
+	.dw PalsScreen20h
+	.dw NtScreen20h
+	.db $00
+	.dw BgScreen20h
+.else
+	.dw $8000
+	.dw $8010
+	.db $00
+	.dw $8159
+.endif
+
+
+Screen21h:
+	.dw $888e
 	.db $9e                                                  ; $e5d6 : $9e
 	dey                                                  ; $e5d7 : $88
 	.db $00                                                  ; $e5d8 : $00
