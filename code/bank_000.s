@@ -3369,47 +3369,83 @@ LoadScreen:
 
 
 ScreenSetupsSrcBanks:
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0b
-	.db $0e
-	.db $0c
-	.db $0c
-	.db $0c
-	.db $0c
-	.db $0c
-	.db $0c
-	.db $0c
-	.db $0d
-	.db $0d
-	.db $0d
-	.db $0d
-	.db $0d
-	.db $0d
-	.db $0d
-	.db $0e
-	.db $08
-	.db $08
-	.db $08
-	.db $08
-	.db $08
-	.db $08
-	.db $08
-	.db $08
 .ifdef HACK
 	.db $10
+	.db $10
+	.db $10
+	.db $10
+	.db $11
+	.db $11
+	.db $11
+	.db $11
+	.db $11
+	.db $12
+	.db $12
+	.db $12
+	.db $12
+	.db $13
+	.db $13
+	.db $13
+	.db $13
+	.db $14
+	.db $14
+	.db $14
+	.db $14
+	.db $15
+	.db $15
+	.db $15
+	.db $15
+	.db $16
+	.db $16
+	.db $16
+	.db $16
+	.db $16
+	.db $17
+	.db $17
+	.db $17
+	.db $17
+	.db $17
+	.db $17
+	.db $17
 .else
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0b
+	.db $0e
+	.db $0c
+	.db $0c
+	.db $0c
+	.db $0c
+	.db $0c
+	.db $0c
+	.db $0c
+	.db $0d
+	.db $0d
+	.db $0d
+	.db $0d
+	.db $0d
+	.db $0d
+	.db $0d
+	.db $0e
+	.db $08
+	.db $08
+	.db $08
+	.db $08
+	.db $08
+	.db $08
+	.db $08
+	.db $08
+	.db $0e
+	.db $0e
+	.db $0e
+	.db $0e
 	.db $0e
 .endif
-	.db $0e
-	.db $0e
-	.db $0e
-	.db $0e
 	.db $0e
 	.db $0e
 	.db $0e
@@ -7222,8 +7258,8 @@ br_00_e469:
 
 
 ScreenSetupsSrcData:
-	.dw Screen00h
-	.dw Screen01h
+	.dw $e4c7
+	.dw $e4d0
 	.dw $e4d9
 	.dw $e4e2
 	.dw $e4eb
@@ -7254,7 +7290,7 @@ ScreenSetupsSrcData:
 	.dw $e5b2
 	.dw $e5bb
 	.dw $e5c4
-	.dw Screen20h
+	.dw $e5cd
 	.dw $e5d4
 	.dw $e5db
 	.dw $e5e2
@@ -7264,6 +7300,10 @@ ScreenSetupsSrcData:
 	.dw $e604
 	.dw $e604
 
+.ifdef HACK
+	.incbin "data/screenSrcs.bin"
+
+.else
 
 Screen00h:
 	.dw $8b81 ; palettes
@@ -7446,17 +7486,10 @@ br_00_e565:
 
 
 Screen20h:
-.ifdef HACK
-	.dw PalsScreen20h
-	.dw NtScreen20h
-	.db $00
-	.dw BgScreen20h
-.else
 	.dw $8000
 	.dw $8010
 	.db $00
 	.dw $8159
-.endif
 
 
 Screen21h:
@@ -7474,12 +7507,19 @@ Screen21h:
 	sty $00, x                                                  ; $e5e5 : $94, $00
 	dex                                                  ; $e5e7 : $ca
 	stx $1b, y                                                  ; $e5e8 : $96, $1b
-	lda ($20, x)                                                  ; $e5ea : $a1, $20
-	lda $30                                                  ; $e5ec : $a5, $30
-	lda $01                                                  ; $e5ee : $a5, $01
-	.db $42                                                  ; $e5f0 : $42
-	lda $54                                                  ; $e5f1 : $a5, $54
-	lda $5e                                                  ; $e5f3 : $a5, $5e
+	.db $a1
+
+
+Data_0_e5eb:
+	.dw $a520
+	.dw $a530
+	.db $01
+	.dw $a542
+	.dw $a554
+	
+
+;
+	.db $5e                                                  ; $e5f4 : $5e
 	.db $a7                                                  ; $e5f5 : $a7
 	ror $a7.w                                                  ; $e5f6 : $6e, $a7, $00
 	.db $17                                                  ; $e5f9 : $17
@@ -7490,15 +7530,21 @@ Screen21h:
 	ora ($40, x)                                                  ; $e5ff : $01, $40
 	.db $b2                                                  ; $e601 : $b2
 	inc $b9                                                  ; $e602 : $e6, $b9
-	sty $f1, x                                                  ; $e604 : $94, $f1
-	ldy $f1                                                  ; $e606 : $a4, $f1
-	.db $00                                                  ; $e608 : $00
-	.db $1f                                                  ; $e609 : $1f
-	sbc $20, x                                                  ; $e60a : $f5, $20
-	jsr $20ed                                                  ; $e60c : $20, $ed, $20
-	rol a                                                  ; $e60f : $2a
-	sbc $b620                                                  ; $e610 : $ed, $20, $b6
-	cpx $0ca9                                                  ; $e613 : $ec, $a9, $0c
+
+
+Data_0_e604:
+	.dw $f194
+	.dw $f1a4
+	.db $00
+	.dw $f51f
+	
+.endif
+
+Func_0_e60b:
+	jsr Jump_00_ed20                                                  ; $e60b : $20, $20, $ed
+	jsr Func_0_ed2a                                                  ; $e60e : $20, $2a, $ed
+	jsr Call_00_ecb6                                                  ; $e611 : $20, $b6, $ec
+	lda #$0c                                                  ; $e614 : $a9, $0c
 	sta $030b                                                  ; $e616 : $8d, $0b, $03
 	lda #$0d                                                  ; $e619 : $a9, $0d
 	sta $030a                                                  ; $e61b : $8d, $0a, $03
@@ -7789,7 +7835,7 @@ br_00_e775:
 	cmp #$64                                                  ; $e778 : $c9, $64
 	bcc br_00_e77f                                                  ; $e77a : $90, $03
 
-	jsr $e60b                                                  ; $e77c : $20, $0b, $e6
+	jsr Func_0_e60b                                                  ; $e77c : $20, $0b, $e6
 
 br_00_e77f:
 	rts                                                  ; $e77f : $60
@@ -7880,7 +7926,7 @@ br_00_e7ec:
 
 
 br_00_e7f7:
-	jsr $e60b                                                  ; $e7f7 : $20, $0b, $e6
+	jsr Func_0_e60b                                                  ; $e7f7 : $20, $0b, $e6
 	rts                                                  ; $e7fa : $60
 
 
@@ -8041,7 +8087,7 @@ br_00_e8bb:
 
 Jump_00_e8c3:
 br_00_e8c3:
-	jsr $e60b                                                  ; $e8c3 : $20, $0b, $e6
+	jsr Func_0_e60b                                                  ; $e8c3 : $20, $0b, $e6
 	rts                                                  ; $e8c6 : $60
 
 
@@ -8860,6 +8906,7 @@ br_00_ed24:
 	rts                                                  ; $ed29 : $60
 
 
+Func_0_ed2a:
 	ldy #$21                                                  ; $ed2a : $a0, $21
 	lda #$00                                                  ; $ed2c : $a9, $00
 

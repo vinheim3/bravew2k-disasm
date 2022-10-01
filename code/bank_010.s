@@ -5,28 +5,60 @@
 .bank $010 slot 2
 .org $0
 
-PalsScreen20h:
-	.db $3f                                                  ; $8000 : $3f
-	.db $22                                                  ; $8001 : $22
-	ora ($16), y                                                  ; $8002 : $11, $16
-	.db $3f                                                  ; $8004 : $3f
-	.db $22                                                  ; $8005 : $22
-	plp                                                  ; $8006 : $28
-	and #$3f                                                  ; $8007 : $29, $3f
-	plp                                                  ; $8009 : $28
-	ora ($29), y                                                  ; $800a : $11, $29
-	.db $3f                                                  ; $800c : $3f
-	.db $22                                                  ; $800d : $22
-	asl $29, x                                                  ; $800e : $16, $29
+PalsScreen00h:
+	.db $0c, $3f, $30, $16, $0c, $3f, $30, $10, $0c, $3f, $30, $12, $0c, $3f, $30, $28
 
-NtScreen20h:
-    .db $20, $00
-	.dw $0401
-    .incbin "data/nt20h.bin"
+NtScreen00h:
+	.db $20, $00, $01, $04
+	.incbin "data/nt00h.bin"
 
-BgScreen20h:
-    .db $10, $00
-    .dw $0c21
-    .incbin "data/bg20h.bin"
+BgScreen00h:
+	.db $10, $00, $d1, $0f
+	.incbin "data/bg00h.bin"
+
+PalsScreen01h:
+	.db $0c, $3f, $30, $16, $0c, $3f, $30, $10, $0c, $3f, $30, $12, $0c, $3f, $30, $28
+
+NtScreen01h:
+	.db $20, $00, $01, $04
+	.incbin "data/nt01h.bin"
+
+BgScreen01h:
+	.db $10, $00, $51, $0b
+	.incbin "data/bg01h.bin"
+
+SprScreen01h:
+	.db $00, $00, $81, $09
+	.incbin "data/spr01h.bin"
+
+PalsScreen02h:
+	.db $0c, $3f, $30, $16, $0c, $3f, $30, $10, $0c, $3f, $30, $12, $0c, $3f, $30, $28
+
+NtScreen02h:
+	.db $20, $00, $01, $04
+	.incbin "data/nt02h.bin"
+
+BgScreen02h:
+	.db $10, $00, $81, $0d
+	.incbin "data/bg02h.bin"
+
+SprScreen02h:
+	.db $00, $00, $81, $09
+	.incbin "data/spr02h.bin"
+
+PalsScreen03h:
+	.db $0c, $3f, $30, $16, $0c, $3f, $30, $10, $0c, $3f, $30, $12, $0c, $3f, $30, $28
+
+NtScreen03h:
+	.db $20, $00, $01, $04
+	.incbin "data/nt03h.bin"
+
+BgScreen03h:
+	.db $10, $00, $c1, $0f
+	.incbin "data/bg03h.bin"
+
+SprScreen03h:
+	.db $00, $00, $71, $0a
+	.incbin "data/spr03h.bin"
 
 .endif
