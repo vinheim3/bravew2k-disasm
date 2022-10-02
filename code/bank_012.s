@@ -11,10 +11,12 @@ PalsScreen09h:
 NtScreen09h:
 	.db $20, $00, $01, $04
 	.incbin "data/nt09h.bin"
+	.db $00, $00, $00, $00, $00, $00
 
 BgScreen09h:
 	.db $10, $00, $c1, $0f
 	.incbin "data/bg09h.bin"
+	.db $00, $00, $00, $00, $00, $00, $00
 
 SprScreen09h:
 	.db $00, $00, $91, $0b
@@ -26,10 +28,12 @@ PalsScreen0ah:
 NtScreen0ah:
 	.db $20, $00, $01, $04
 	.incbin "data/nt0ah.bin"
+	.db $00, $00, $00, $00
 
 BgScreen0ah:
 	.db $10, $00, $61, $0e
 	.incbin "data/bg0ah.bin"
+	.db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 SprScreen0ah:
 	.db $00, $00, $81, $09
@@ -41,10 +45,12 @@ PalsScreen0bh:
 NtScreen0bh:
 	.db $20, $00, $01, $04
 	.incbin "data/nt0bh.bin"
+	.db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 BgScreen0bh:
 	.db $10, $00, $21, $0b
 	.incbin "data/bg0bh.bin"
+	.db $00, $00, $00, $00, $00, $00, $00
 
 SprScreen0bh:
 	.db $00, $00, $c1, $09
@@ -60,6 +66,7 @@ NtScreen0ch:
 BgScreen0ch:
 	.db $10, $00, $e1, $0c
 	.incbin "data/bg0ch.bin"
+	.db $00, $00, $00, $00, $00, $00, $00, $00
 
 SprScreen0ch:
 	.db $00, $00, $11, $0b

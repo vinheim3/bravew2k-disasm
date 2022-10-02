@@ -77,36 +77,65 @@ if __name__ == "__main__":
         bg = decompress(bgSrc, data)
 
         # gen comps
-        size = 0 if not spr else len(spr)+4
-        size += len(pals) + len(nt) + len(bg) + 8
-        if size + banksData[currBank].size > 0x8000:
+        maxSize = 0 if not spr else len(spr)+0x10
+        maxSize += len(pals) + len(nt)+4 + len(bg)+0x10
+        if maxSize + banksData[currBank].size > 0x8000:
             currBank += 1
-        startOffs = banksData[currBank].size + 0x8000
-        banksData[currBank].size += size
         srcBanksComps.append(f"\t.db ${currBank:02x}")
+
+        # calculate padding before bg+spr, they must be $10-aligned+$c
+        startOffs = banksData[currBank].size + 0x8000
+        lastOffs = startOffs
 
         banksData[currBank].bankComps.extend([
             f"\nPalsScreen{screen:02x}h:",
             f"\t.db " + ", ".join(f"${b:02x}" for b in pals),
         ])
 
-        to_replace[metaAddr+0] = startOffs & 0xff
-        to_replace[metaAddr+1] = startOffs >> 8
-        startOffs += 0x10
-        to_replace[metaAddr+2] = startOffs & 0xff
-        to_replace[metaAddr+3] = startOffs >> 8
-        startOffs += len(nt) + 4
-        to_replace[metaAddr+5] = startOffs & 0xff
-        to_replace[metaAddr+6] = startOffs >> 8
-        if hasSpr:
-            startOffs += len(bg) + 4
-            to_replace[metaAddr+7] = startOffs & 0xff
-            to_replace[metaAddr+8] = startOffs >> 8
+        # pals pointer
+        to_replace[metaAddr+0] = lastOffs & 0xff
+        to_replace[metaAddr+1] = lastOffs >> 8
 
-        for prefix, src in (
-            ('Nt', ntSrc),
-            ('Bg', bgSrc),
-            ('Spr', sprSrc),
+        lastOffs += 0x10
+
+        # nt pointer
+        to_replace[metaAddr+2] = lastOffs & 0xff
+        to_replace[metaAddr+3] = lastOffs >> 8
+
+        lastOffs += 4 + len(nt)
+
+        # bg pointer
+        bgPad = 0xc - (lastOffs & 0xf)
+        if bgPad < 0:
+            bgPad += 0x10
+        
+        lastOffs += bgPad
+
+        to_replace[metaAddr+5] = lastOffs & 0xff
+        to_replace[metaAddr+6] = lastOffs >> 8
+
+        lastOffs += 4 + len(bg)
+
+        # spr pointer
+        sprPad = 0
+        if hasSpr:
+            sprPad = 0xc - (lastOffs & 0xf)
+            if sprPad < 0:
+                sprPad += 0x10
+
+            lastOffs += sprPad
+
+            to_replace[metaAddr+7] = lastOffs & 0xff
+            to_replace[metaAddr+8] = lastOffs >> 8
+
+            lastOffs += 4 + len(spr)
+
+        banksData[currBank].size += (lastOffs-startOffs)
+
+        for prefix, src, pad in (
+            ('Nt', ntSrc, 0),
+            ('Bg', bgSrc, bgPad),
+            ('Spr', sprSrc, sprPad),
         ):
             if not src:
                 continue
@@ -116,6 +145,11 @@ if __name__ == "__main__":
             # decomped = decompress(src, data)
             # with open(fpath, 'wb') as f:
             #     f.write(decomped)
+
+            if pad:
+                banksData[currBank].bankComps.append(
+                    f"\t.db " + ", ".join("$00" for _ in range(pad))
+                )
 
             banksData[currBank].bankComps.extend([
                 f"\n{prefix}Screen{screen:02x}h:",
